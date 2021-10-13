@@ -7,7 +7,7 @@ describe('CTlab18OAuth routes', () => {
   beforeEach(() => {
     return setup(pool);
   });
-
+ 
   it('Should GET /api/v1/auth/login and redirect to github for login', async () => {
     const response = await request(app).get('/api/auth/login');
 

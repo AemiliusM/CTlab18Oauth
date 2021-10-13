@@ -7,7 +7,7 @@ jest.mock('../lib/middleware/ensureAuth.js', () => {
   return (req, res, next) => {
     req.user = {
       login: 'fake_user',
-      avatar: 'github_avatar_url',
+      avatar: 'https://example.com/image.png',
       iat: Date.now(),
       exp: Date.now(),
     };
@@ -24,10 +24,11 @@ describe('CTlab18OAuth routes', () => {
 
     expect(response.body).toEqual({
       login: 'fake_user',
-      avatar: 'github_avatar_url',
+      avatar: 'https://example.com/image.png',
       iat: Date.now(),
-      exp: Date.now(),
+      exp: Date.now(), 
     });
+    
   });
 
   afterAll(() => {

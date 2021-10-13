@@ -30,6 +30,7 @@ describe('CTlab18OAuth routes', () => {
     const response = await request(app).get('/api/auth/me');
 
     expect(response.body).toEqual({
+      id: '1',
       login: 'fake_user',
       avatar: 'https://example.com/image.png',
       iat: expect.any(Number),
@@ -37,20 +38,24 @@ describe('CTlab18OAuth routes', () => {
     });
   });
 
+  // first call insert method/ replace auth/me
+  // then call a post request 
+  
   it('Should POST to create a new user post', async () => {
-    const response = await request(app).get('/api/auth/me');
-    await request(app).post('/api/auth/posts').send(postUser);
-
-    expect(response.body).toEqual({
-      id: '1',
-      login: 'fake_user',
-      avatar: 'https://example.com/image.png',
-      iat: expect.any(Number),
-      exp: expect.any(Number),
-      userId: expect.any(String),
-      photoUrl: expect.any(String),
-      caption: expect.any(String),
-    });
+    await request(app).get('/api/auth/me');
+    return await request(app).post('/api/auth/posts').send(postUser)
+      .then((res) => {
+        expect(res.body).toEqual({
+          id: '1',
+          login: 'fake_user',
+          avatar: 'https://example.com/image.png',
+          iat: expect.any(Number),
+          exp: expect.any(Number),
+          userId: expect.any(String),
+          photoUrl: expect.any(String),
+          caption: expect.any(String),
+        });
+      });
   });
 
   afterAll(() => {

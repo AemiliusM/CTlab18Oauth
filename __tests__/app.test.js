@@ -19,8 +19,8 @@ describe('CTlab18OAuth routes', () => {
     return setup(pool);
   });
 
-  it('Should GET /api/v1/auth/login and redirect to github for login', async () => {
-    const response = await request(app).get('/api/auth/login');
+  it('Should GET /api/auth/me -- users profile page ', async () => {
+    const response = await request(app).get('/api/auth/me');
 
     expect(response.body).toEqual({
       login: 'fake_user',

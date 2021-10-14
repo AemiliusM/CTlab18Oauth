@@ -21,6 +21,17 @@ const postUser = {
   caption: 'This some lovely caption from the bottom of my heart :)',
 };
 
+const postUser2 = {
+  userId: '1',
+  photoUrl: 'www.photo-example.png',
+  caption: 'this is my best post ever!!!'
+};
+const postUser3 = {
+  userId: '1',
+  photoUrl: 'www.photo-example-24.png',
+  caption: 'i love lamp'
+};
+
 describe('CTlab18OAuth routes', () => {
   beforeEach(() => {
     return setup(pool);
@@ -67,7 +78,7 @@ describe('CTlab18OAuth routes', () => {
     await request(app).post('/api/auth/posts').send(postUser2);
     await request(app).post('/api/auth/posts').send(postUser3);
     return await request(app).get('/api/auth/posts').then(res => {
-
+      expect(res.body).toEqual({ ...postUser, id: '1' }, { ...postUser2, id: '2' }, { ...postUser3, id: '3' });
     });
   });
       

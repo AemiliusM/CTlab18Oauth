@@ -2,7 +2,6 @@ const pool = require('../lib/utils/pool.js');
 const setup = require('../data/setup.js');
 const request = require('supertest');
 const app = require('../lib/app.js');
-const { post } = require('superagent');
 const User = require('../lib/models/User-model.js');
 
 jest.mock('../lib/middleware/ensureAuth.js', () => {
@@ -15,6 +14,11 @@ jest.mock('../lib/middleware/ensureAuth.js', () => {
   };
 });
 
+const comment1 = {
+  commentBy: '1',
+  post: '1',
+  comment: 'no comments, no comments'
+};
 const postUser = {
   userId: '1',
   photoUrl: 'https://example.com/image.png',
@@ -81,8 +85,37 @@ describe('CTlab18OAuth routes', () => {
       expect(res.body).toEqual({ ...postUser, id: '1' }, { ...postUser2, id: '2' }, { ...postUser3, id: '3' });
     });
   });
+
+  it.only('Should POST to create a new user comment', async () => {
+    await User.insert({
+      login: 'fake_user',
+      avatar: 'https://example.com/image.png',
+    });
+    await request(app).post('/api/auth/posts').send(postUser);
+    return await request(app).post('/api/auth/comments').send(comment1).then(res => {
+      expect(res.body).toEqual({ ...comment1, id:'1' });
+    });
       
-  afterAll(() => {
-    pool.end();
+          
+  });
+      
+  it('should return a post by id', async () => {
+    await User.insert({
+      login: 'fake_user',
+      avatar: 'https://example.com/image.png',
+    });
+    await request(app).post('/api/auth/posts').send(postUser);
+    await request(app).post('/api/auth/posts').send(postUser2);
+    await request(app).post('/api/auth/posts').send(postUser3);
+    await request(app).post('/api/auth/comments').send(comment1);
+    return await request(app).get('/api/auth/posts/1').then(res => {
+      expect(res.body).toEqual({ ...postUser, id: '1' }, { ...postUser2, id: '2' }, { ...postUser3, id: '3' });
+    });
   });
 });
+
+      
+afterAll(() => {
+  pool.end();
+});
+

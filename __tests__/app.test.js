@@ -142,6 +142,25 @@ describe('CTlab18OAuth routes', () => {
         });
       });
   });
+
+  it('should delete post by id-- only if they are the owner', async () => {
+    await User.insert({
+      login: 'fake_user',
+      avatar: 'https://example.com/image.png',
+    });
+    await request(app).post('/api/auth/posts').send(postUser);
+    await request(app).post('/api/auth/posts').send(postUser2);
+    await request(app).post('/api/auth/posts').send(postUser3);
+
+    return await request(app)
+      .delete('/api/auth/posts/2')
+      .then((res) => {
+        expect(res.body).toEqual({
+          ...postUser2,
+          id: '2',
+        });
+      });
+  });
 });
 
 afterAll(() => {

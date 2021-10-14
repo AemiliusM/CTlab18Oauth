@@ -58,6 +58,19 @@ describe('CTlab18OAuth routes', () => {
       });
   });
 
+  it('should return all posts', async () => {
+    await User.insert({
+      login: 'fake_user',
+      avatar: 'https://example.com/image.png',
+    });
+    await request(app).post('/api/auth/posts').send(postUser);
+    await request(app).post('/api/auth/posts').send(postUser2);
+    await request(app).post('/api/auth/posts').send(postUser3);
+    return await request(app).get('/api/auth/posts').then(res => {
+
+    });
+  });
+      
   afterAll(() => {
     pool.end();
   });

@@ -86,7 +86,7 @@ describe('CTlab18OAuth routes', () => {
     });
   });
 
-  it.only('Should POST to create a new user comment', async () => {
+  it('Should POST to create a new user comment', async () => {
     await User.insert({
       login: 'fake_user',
       avatar: 'https://example.com/image.png',
@@ -99,7 +99,7 @@ describe('CTlab18OAuth routes', () => {
           
   });
       
-  it('should return a post by id', async () => {
+  it.only('should return a post by id', async () => {
     await User.insert({
       login: 'fake_user',
       avatar: 'https://example.com/image.png',
@@ -108,8 +108,8 @@ describe('CTlab18OAuth routes', () => {
     await request(app).post('/api/auth/posts').send(postUser2);
     await request(app).post('/api/auth/posts').send(postUser3);
     await request(app).post('/api/auth/comments').send(comment1);
-    return await request(app).get('/api/auth/posts/1').then(res => {
-      expect(res.body).toEqual({ ...postUser, id: '1' }, { ...postUser2, id: '2' }, { ...postUser3, id: '3' });
+    return await request(app).get('/api/auth/posts/2').then(res => {
+      expect(res.body).toEqual({ ...postUser2, id: '2' });
     });
   });
 });
